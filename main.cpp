@@ -68,12 +68,13 @@ public:
     }
 
     bool checkPassword(string pwd) const {
-        // TODO: Implement password check
+        if (pwd == password)
+            return true;
         return false;
     }
 
     void changePassword(string newPwd) {
-        // TODO: Implement password change
+        password = newPwd;
     }
 };
 
