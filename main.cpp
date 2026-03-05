@@ -99,27 +99,27 @@ public:
     }
 
     string getContent() const {
-        // TODO: Implement getter
+        return content;
         return "";
     }
 
     string getSender() const {
-        // TODO: Implement getter
+        return sender;
         return "";
     }
 
     string getTimestamp() const {
-        // TODO: Implement getter
+        return timestamp;
         return "";
     }
 
     string getStatus() const {
-        // TODO: Implement getter
+        return status;
         return "";
     }
 
     Message* getReplyTo() const {
-        // TODO: Implement getter
+        return replyTo;
         return nullptr;
     }
 
