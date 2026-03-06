@@ -211,9 +211,7 @@ public:
     virtual void displayChat() const {
        cout<<"Messages:"<<endl;
        for(int i=0;i<messages.size();i++){
-        cout<<"Sender: "<<messages[i].getSender()<<endl;
-        cout<<"Timestamp: "<<messages[i].getTimestamp()<<endl;
-        cout<<"Content: "<<messages[i].getContent()<<endl;
+       messages[i].display();
 
        }
     }
