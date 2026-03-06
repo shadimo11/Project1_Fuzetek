@@ -167,7 +167,7 @@ public:
         else if (emojiCode == ":thumbsup")
             to = "👍";
         else
-            cout << "[!] Unkown emoji code: " << emojiCode << endl;
+            cout << "[!] Unknown emoji code: " << emojiCode << endl;
     }
 };
 
