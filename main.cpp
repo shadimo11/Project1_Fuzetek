@@ -143,11 +143,14 @@ public:
     }
 
     void updateTimestamp() {
-        // TODO: Implement timestamp update
+        timeStamp = time(0);
     }
 
     void display() const {
-        // TODO: Implement message display
+        cout << "Sender:" << sender << endl;
+        cout << "Message:" << content << endl;
+        cout << "Time:" << timeStamp << endl;
+        cout << "Status:" << status << endl;
     }
 
     void addEmoji(string emojiCode) {
