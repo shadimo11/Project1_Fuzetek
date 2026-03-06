@@ -246,7 +246,7 @@ public:
     }
 
     void showTypingIndicator(const string& username) const {
-        cout << ". .. " << username << " is typing..." << endl;
+        cout << " ... " << username << " is typing..." << endl;
     }
 };
 
