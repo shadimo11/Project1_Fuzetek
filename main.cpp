@@ -143,13 +143,13 @@ public:
     }
 
     void updateTimestamp() {
-        timeStamp = time(0);
+        timestamp = time(0);
     }
 
     void display() const {
         cout << "Sender:" << sender << endl;
         cout << "Message:" << content << endl;
-        cout << "Time:" << timeStamp << endl;
+        cout << "Time:" << timestamp << endl;
         cout << "Status:" << status << endl;
     }
 
