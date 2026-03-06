@@ -111,27 +111,26 @@ public:
 
     string getContent() const {
         return content;
-        return "";
+
     }
 
     string getSender() const {
         return sender;
-        return "";
+
     }
 
     string getTimestamp() const {
         return timestamp;
-        return "";
+
     }
 
     string getStatus() const {
         return status;
-        return "";
+
     }
 
     Message* getReplyTo() const {
         return replyTo;
-        return nullptr;
     }
 
     void setStatus(string newStatus) {
@@ -194,12 +193,27 @@ public:
     }
 
     bool deleteMessage(int index, const string& username) {
-        // TODO: Implement message deletion
+        if(index>=0 && index<messages.size()){
+      if(messages[index].getStatus()=="sent" && messages[index].getSender()==username){
+        messages.erase(messages.begin()+index);
+        return true;
+      }
+      else{
+        cout<<"Username is incorrect or not a sender";
+      }
+        }
+        else{
+            cout<<"can't delete index out of range";
+        }
         return false;
     }
 
     virtual void displayChat() const {
-        // TODO: Implement chat display
+       cout<<"Messages:"<<endl;
+       for(int i=0;i<messages.size();i++){
+       messages[i].display();
+
+       }
     }
 
     vector<Message> searchMessages(string keyword) const {
