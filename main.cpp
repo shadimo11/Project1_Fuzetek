@@ -154,7 +154,20 @@ public:
     }
 
     void addEmoji(string emojiCode) {
-        // TODO: Implement emoji support
+        string from = emojiCode;
+        string to = "";
+        if (emojiCode == ":(")
+            to = "😔";
+        else if (emojiCode == ":)")
+            to = "😊";
+        else if (emojiCode == ":D")
+            to = "😀";
+        else if (emojiCode == "<3")
+            to = "❤️";
+        else if (emojiCode == ":thumbsup")
+            to = "👍";
+        else
+            cout << "[!] Unkown emoji code: " << emojiCode << endl;
     }
 };
 
