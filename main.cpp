@@ -209,9 +209,16 @@ public:
     }
 
     virtual void displayChat() const {
-       cout<<"Messages:"<<endl;
-       for(int i=0;i<messages.size();i++){
-       messages[i].display();
+        if (messages.empty())
+            cout << "(No messages yet)" << endl;
+        else
+        {
+            cout<<"Messages:"<<endl;
+            for(int i=0;i<messages.size();i++){
+                messages[i].display();
+        }
+        cout << endl;
+        
 
        }
     }
