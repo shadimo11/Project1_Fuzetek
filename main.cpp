@@ -352,7 +352,8 @@ cout << "========== Group: " << chatName << " ==========" << endl;
             for (const auto &msg : messages)
                 msg.display();
         }
-        cout << endl;    }
+        cout << endl;    
+    }
 
     void sendJoinRequest(const string& username) {
         // TODO: Implement join request
