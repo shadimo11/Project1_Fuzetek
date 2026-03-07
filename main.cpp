@@ -291,7 +291,7 @@ public:
     }
 
     void addAdmin(string newAdmin) {
-        // TODO: Implement add admin
+        admins.push_back(newAdmin);
     }
 
     bool removeParticipant(const string& admin, const string& userToRemove) {
@@ -315,7 +315,11 @@ public:
     }
 
     bool isAdmin(string username) const {
-        // TODO: Implement admin check
+        for (int i = 0; i < admins.size(); i++)
+        {
+            if (admins[i] == username)
+                return true;
+        }
         return false;
     }
 
