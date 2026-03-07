@@ -314,8 +314,30 @@ public:
     }
 
     void displayChat() const override {
-        // TODO: Implement group chat display
-    }
+cout << "========== Group: " << chatName << " ==========" << endl;
+        if (!description.empty())
+            cout << "  Description: " << description << endl;
+        
+        cout << "  Participants: ";
+        for (int i = 0; i< participants.size(); i++)
+        {
+            cout << participants[i];
+            if (isAdmin(participants[i]))
+                cout << " [Admin]";
+            if (i < participants.size() - 1)
+                cout << ", ";
+        }
+        cout << endl;
+
+        cout << " ----------------------------------------------" << endl;
+        if (messages.empty())
+            cout << "  (No messages yet)" << endl;
+        else
+        {
+            for (const auto &msg : messages)
+                msg.display();
+        }
+        cout << endl;    }
 
     void sendJoinRequest(const string& username) {
         // TODO: Implement join request
