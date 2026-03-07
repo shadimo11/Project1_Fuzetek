@@ -295,7 +295,22 @@ public:
     }
 
     bool removeParticipant(const string& admin, const string& userToRemove) {
-        // TODO: Implement remove participant
+        if (!isAdmin(admin))
+        {
+            cout << "  [!] Only admins can remove participants." << endl;
+            return false;
+        }
+        for (auto i = participants.begin(); i != participants.end(); i++)
+        {
+            if (*i == userToRemove)
+            {
+                participants.erase(i);
+                admins.erase(remove(admins.begin(), admins.end(), userToRemove), admins.end());
+                cout << "  Done!, " << userToRemove << " removed from the group." << endl;
+                return true;
+            }
+        }
+        cout << "  [!] User not found in group." << endl;
         return false;
     }
 
@@ -314,7 +329,30 @@ public:
     }
 
     void displayChat() const override {
-        // TODO: Implement group chat display
+cout << "========== Group: " << chatName << " ==========" << endl;
+        if (!description.empty())
+            cout << "  Description: " << description << endl;
+        
+        cout << "  Participants: ";
+        for (int i = 0; i< participants.size(); i++)
+        {
+            cout << participants[i];
+            if (isAdmin(participants[i]))
+                cout << " [Admin]";
+            if (i < participants.size() - 1)
+                cout << ", ";
+        }
+        cout << endl;
+
+        cout << " ----------------------------------------------" << endl;
+        if (messages.empty())
+            cout << "  (No messages yet)" << endl;
+        else
+        {
+            for (const auto &msg : messages)
+                msg.display();
+        }
+        cout << endl;    
     }
 
     void sendJoinRequest(const string& username) {
