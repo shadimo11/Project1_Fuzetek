@@ -225,9 +225,14 @@ public:
     }
 
     vector<Message> searchMessages(string keyword) const {
-        // TODO: Implement message search
-        return {};
+    vector <Message> result;
+    for (int i = 0;i < messages.size();i++) {
+        if (messages[i].getContent().find(keyword) != string::npos) {
+            result.push_back(messages[i]);
+        }
     }
+    return result;
+}
 
     void exportToFile(const string& filename) const {
         // TODO: Implement export to file
