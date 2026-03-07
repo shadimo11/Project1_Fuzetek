@@ -295,7 +295,22 @@ public:
     }
 
     bool removeParticipant(const string& admin, const string& userToRemove) {
-        // TODO: Implement remove participant
+        if (!isAdmin(admin))
+        {
+            cout << "  [!] Only admins can remove participants." << endl;
+            return false;
+        }
+        for (auto i = participants.begin(); i != participants.end(); i++)
+        {
+            if (*i == userToRemove)
+            {
+                participants.erase(i);
+                admins.erase(remove(admins.begin(), admins.end(), userToRemove), admins.end());
+                cout << "  Done!, " << userToRemove << " removed from the group." << endl;
+                return true;
+            }
+        }
+        cout << "  [!] User not found in group." << endl;
         return false;
     }
 
