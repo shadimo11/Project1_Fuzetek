@@ -7,7 +7,8 @@ using namespace std;
 // ========================
 //       USER CLASS
 // ========================
-class User {
+class User
+{
 private:
     string username;
     string password;
@@ -16,7 +17,8 @@ private:
     string lastSeen;
 
 public:
-    User() {
+    User()
+    {
         username="";
         password="";
         phoneNumber="";
@@ -26,7 +28,8 @@ public:
 
     }
 
-    User(string uname, string pwd, string phone) {
+    User(string uname, string pwd, string phone)
+    {
 
         username=uname;
         password=pwd;
@@ -37,43 +40,52 @@ public:
 
     }
 
-    string getUsername() const {
+    string getUsername() const
+    {
         return username;
     }
 
-    string getPhoneNumber() const {
+    string getPhoneNumber() const
+    {
         return phoneNumber;
     }
 
-    string getStatus() const {
+    string getStatus() const
+    {
         return status;
     }
 
-    string getLastSeen() const {
+    string getLastSeen() const
+    {
         return lastSeen;
     }
 
-    void setStatus(string newStatus) {
+    void setStatus(string newStatus)
+    {
         status = newStatus;
     }
 
-    void setPhoneNumber(string phone) {
+    void setPhoneNumber(string phone)
+    {
         phoneNumber = phone;
     }
 
-    void updateLastSeen() {
+    void updateLastSeen()
+    {
         time_t timestamp =time(nullptr);
         lastSeen=ctime(&timestamp);
 
     }
 
-    bool checkPassword(string pwd) const {
+    bool checkPassword(string pwd) const
+    {
         if (pwd == password)
             return true;
         return false;
     }
 
-    void changePassword(string newPwd) {
+    void changePassword(string newPwd)
+    {
         password = newPwd;
     }
 };
@@ -81,7 +93,8 @@ public:
 // ========================
 //      MESSAGE CLASS
 // ========================
-class Message {
+class Message
+{
 private:
     string sender;
     string content;
@@ -90,7 +103,8 @@ private:
     Message* replyTo;
 
 public:
-    Message() {
+    Message()
+    {
         sender = "";
         content = "";
         timestamp = "";
@@ -98,7 +112,8 @@ public:
         replyTo = nullptr;
     }
 
-    Message(string sndr, string cntnt) {
+    Message(string sndr, string cntnt)
+    {
         sender = sndr;
         content = cntnt;
 
@@ -109,50 +124,60 @@ public:
         replyTo = nullptr;
     }
 
-    string getContent() const {
+    string getContent() const
+    {
         return content;
 
     }
 
-    string getSender() const {
+    string getSender() const
+    {
         return sender;
 
     }
 
-    string getTimestamp() const {
+    string getTimestamp() const
+    {
         return timestamp;
 
     }
 
-    string getStatus() const {
+    string getStatus() const
+    {
         return status;
 
     }
 
-    Message* getReplyTo() const {
+    Message* getReplyTo() const
+    {
         return replyTo;
     }
 
-    void setStatus(string newStatus) {
-       status=newStatus;
+    void setStatus(string newStatus)
+    {
+        status=newStatus;
     }
 
-    void setReplyTo(Message* msg) {
+    void setReplyTo(Message* msg)
+    {
         replyTo=msg;
     }
 
-    void updateTimestamp() {
+    void updateTimestamp()
+    {
         timestamp = time(0);
     }
 
-    void display() const {
+    void display() const
+    {
         cout << "Sender:" << sender << endl;
         cout << "Message:" << content << endl;
         cout << "Time:" << timestamp << endl;
         cout << "Status:" << status << endl;
     }
 
-    void addEmoji(string emojiCode) {
+    void addEmoji(string emojiCode)
+    {
         string from = emojiCode;
         string to = "";
         if (emojiCode == ":(")
@@ -173,68 +198,83 @@ public:
 // ========================
 //       CHAT CLASS (BASE)
 // ========================
-class Chat {
+class Chat
+{
 protected:
     vector<string> participants;
     vector<Message> messages;
     string chatName;
 
 public:
-    Chat() {
+    Chat()
+    {
         chatName = "";
     }
 
-    Chat(vector<string> users, string name) {
+    Chat(vector<string> users, string name)
+    {
         participants = users;
         chatName = name;
     }
 
-    void addMessage(const Message& msg) {
+    void addMessage(const Message& msg)
+    {
         messages.push_back(msg);
     }
 
-    bool deleteMessage(int index, const string& username) {
-        if(index>=0 && index<messages.size()){
-      if(messages[index].getStatus()=="sent" && messages[index].getSender()==username){
-        messages.erase(messages.begin()+index);
-        return true;
-      }
-      else{
-        cout<<"Username is incorrect or not a sender";
-      }
+    bool deleteMessage(int index, const string& username)
+    {
+        if(index>=0 && index<messages.size())
+        {
+            if(messages[index].getStatus()=="sent" && messages[index].getSender()==username)
+            {
+                messages.erase(messages.begin()+index);
+                return true;
+            }
+            else
+            {
+                cout<<"Username is incorrect or not a sender";
+            }
         }
-        else{
+        else
+        {
             cout<<"can't delete index out of range";
         }
         return false;
     }
 
-    virtual void displayChat() const {
+    virtual void displayChat() const
+    {
         if (messages.empty())
             cout << "(No messages yet)" << endl;
         else
         {
             cout<<"Messages:"<<endl;
-            for(int i=0;i<messages.size();i++){
+            for(int i=0; i<messages.size(); i++)
+            {
                 messages[i].display();
-        }
-        cout << endl;
-        
+            }
+            cout << endl;
 
-       }
-    }
 
-    vector<Message> searchMessages(string keyword) const {
-    vector <Message> result;
-    for (int i = 0;i < messages.size();i++) {
-        if (messages[i].getContent().find(keyword) != string::npos) {
-            result.push_back(messages[i]);
         }
     }
-    return result;
-}
 
-    void exportToFile(const string& filename) const {
+    vector<Message> searchMessages(string keyword) const
+    {
+        vector <Message> result;
+        for (int i = 0; i < messages.size(); i++)
+        {
+            if (messages[i].getContent().find(keyword) != string::npos)
+            {
+                result.push_back(messages[i]);
+            }
+        }
+        return result;
+    }
+
+    void exportToFile(const string& filename) const
+    {
         // TODO: Implement export to file
     }
 };
@@ -242,13 +282,15 @@ public:
 // ========================
 //     PRIVATE CHAT CLASS
 // ========================
-class PrivateChat : public Chat {
+class PrivateChat : public Chat
+{
 private:
     string user1;
     string user2;
 
 public:
-    PrivateChat(string u1, string u2) {
+    PrivateChat(string u1, string u2)
+    {
         user1 = u1;
         user2 = u2;
         participants.push_back(u1);
@@ -256,7 +298,8 @@ public:
         chatName = "Chat between " + u1 + " and " + u2;
     }
 
-    void displayChat() const override {
+    void displayChat() const override
+    {
         cout << " ============ " << chatName << " ============ " << endl;
         if (messages.empty())
         {
@@ -272,7 +315,8 @@ public:
         cout << endl;
     }
 
-    void showTypingIndicator(const string& username) const {
+    void showTypingIndicator(const string& username) const
+    {
         cout << " ... " << username << " is typing..." << endl;
     }
 };
@@ -280,21 +324,25 @@ public:
 // ========================
 //      GROUP CHAT CLASS
 // ========================
-class GroupChat : public Chat {
+class GroupChat : public Chat
+{
 private:
     vector<string> admins;
     string description;
 
 public:
-    GroupChat(vector<string> users, string name, string creator) {
+    GroupChat(vector<string> users, string name, string creator)
+    {
         // TODO: Implement constructor
     }
 
-    void addAdmin(string newAdmin) {
+    void addAdmin(string newAdmin)
+    {
         // TODO: Implement add admin
     }
 
-    bool removeParticipant(const string& admin, const string& userToRemove) {
+    bool removeParticipant(const string& admin, const string& userToRemove)
+    {
         if (!isAdmin(admin))
         {
             cout << "  [!] Only admins can remove participants." << endl;
@@ -314,25 +362,35 @@ public:
         return false;
     }
 
-    bool isAdmin(string username) const {
+    bool isAdmin(string username) const
+    {
         // TODO: Implement admin check
         return false;
     }
 
-    bool isParticipant(string username) const {
-        // TODO: Implement participant check
+    bool isParticipant(string username) const
+    {
+        for(int i=0; i<participants.size(); i++)
+        {
+            if(participants[i]==username)
+            {
+                return true;
+            }
+        }
         return false;
     }
 
-    void setDescription(string desc) {
+    void setDescription(string desc)
+    {
         // TODO: Implement set description
     }
 
-    void displayChat() const override {
-cout << "========== Group: " << chatName << " ==========" << endl;
+    void displayChat() const override
+    {
+        cout << "========== Group: " << chatName << " ==========" << endl;
         if (!description.empty())
             cout << "  Description: " << description << endl;
-        
+
         cout << "  Participants: ";
         for (int i = 0; i< participants.size(); i++)
         {
@@ -352,34 +410,39 @@ cout << "========== Group: " << chatName << " ==========" << endl;
             for (const auto &msg : messages)
                 msg.display();
         }
-        cout << endl;    
+        cout << endl;
     }
 
-    void sendJoinRequest(const string& username) {
-        // TODO: Implement join request
+    void sendJoinRequest(const string& username)
+    {
+
     }
 };
 
 // ========================
 //    WHATSAPP APP CLASS
 // ========================
-class WhatsApp {
+class WhatsApp
+{
 private:
     vector<User> users;
     vector<Chat*> chats;
     int currentUserIndex;
 
-    int findUserIndex(string username) const {
+    int findUserIndex(string username) const
+    {
         // TODO: Implement user search
         return -1;
     }
 
-    bool isLoggedIn() const {
+    bool isLoggedIn() const
+    {
         // TODO: Implement login check
         return false;
     }
 
-    string getCurrentUsername() const {
+    string getCurrentUsername() const
+    {
         // TODO: Implement get current user
         return "";
     }
@@ -387,33 +450,42 @@ private:
 public:
     WhatsApp() : currentUserIndex(-1) {}
 
-    void signUp() {
+    void signUp()
+    {
         // TODO: Implement user registration
     }
 
-    void login() {
+    void login()
+    {
         // TODO: Implement user login
     }
 
-    void startPrivateChat() {
+    void startPrivateChat()
+    {
         // TODO: Implement private chat creation
     }
 
-    void createGroup() {
+    void createGroup()
+    {
         // TODO: Implement group creation
     }
 
-    void viewChats() const {
+    void viewChats() const
+    {
         // TODO: Implement chat viewing
     }
 
-    void logout() {
+    void logout()
+    {
         // TODO: Implement logout
     }
 
-    void run() {
-        while (true) {
-            if (!isLoggedIn()) {
+    void run()
+    {
+        while (true)
+        {
+            if (!isLoggedIn())
+            {
                 cout << "\n1. Login\n2. Sign Up\n3. Exit\nChoice: ";
                 int choice;
                 cin >> choice;
@@ -422,7 +494,8 @@ public:
                 else if (choice == 2) signUp();
                 else if (choice == 3) break;
             }
-            else {
+            else
+            {
                 cout << "\n1. Start Private Chat\n2. Create Group\n3. View Chats\n4. Logout\nChoice: ";
                 int choice;
                 cin >> choice;
@@ -439,7 +512,8 @@ public:
 // ========================
 //          MAIN
 // ========================
-int main() {
+int main()
+{
     WhatsApp whatsapp;
     whatsapp.run();
     return 0;
