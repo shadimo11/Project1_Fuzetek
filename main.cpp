@@ -287,7 +287,10 @@ private:
 
 public:
     GroupChat(vector<string> users, string name, string creator) {
-        // TODO: Implement constructor
+         participants = user;
+         groupName = name;
+         participants.push_back(creator);
+         admins.push_back(creator);
     }
 
     void addAdmin(string newAdmin) {
