@@ -331,14 +331,15 @@ private:
     string description;
 
 public:
-    GroupChat(vector<string> users, string name, string creator)
-    {
-        // TODO: Implement constructor
+    GroupChat(vector<string> users, string name, string creator) {
+         participants = user;
+         groupName = name;
+         participants.push_back(creator);
+         admins.push_back(creator);
     }
 
-    void addAdmin(string newAdmin)
-    {
-        // TODO: Implement add admin
+    void addAdmin(string newAdmin) {
+        admins.push_back(newAdmin);
     }
 
     bool removeParticipant(const string& admin, const string& userToRemove)
@@ -362,9 +363,12 @@ public:
         return false;
     }
 
-    bool isAdmin(string username) const
-    {
-        // TODO: Implement admin check
+    bool isAdmin(string username) const {
+        for (int i = 0; i < admins.size(); i++)
+        {
+            if (admins[i] == username)
+                return true;
+        }
         return false;
     }
 
@@ -380,9 +384,8 @@ public:
         return false;
     }
 
-    void setDescription(string desc)
-    {
-        // TODO: Implement set description
+    void setDescription(string desc) {
+        description = desc ;
     }
 
     void displayChat() const override
