@@ -338,8 +338,20 @@ public:
          admins.push_back(creator);
     }
 
-    void addAdmin(string newAdmin) {
+    void addAdmin(string newAdmin)
+    {
+        if (!isParticipant(newAdmin))
+        {
+            cout << "User is not in the group." << endl;
+            return;
+        }
+        if (isAdmin(newAdmin))
+        {
+            cout << newAdmin << " is already an admin." << endl;
+            return;
+        }
         admins.push_back(newAdmin);
+        cout << newAdmin << " is now an admin." << endl;
     }
 
     bool removeParticipant(const string& admin, const string& userToRemove)
