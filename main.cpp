@@ -329,7 +329,7 @@ public:
     }
 
     void setDescription(string desc) {
-        // TODO: Implement set description
+        description = desc ;
     }
 
     void displayChat() const override {
