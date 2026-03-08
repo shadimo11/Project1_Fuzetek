@@ -415,6 +415,22 @@ public:
 
     void sendJoinRequest(const string& username)
     {
+        int flag=0;
+
+        for(int i=0; i<participants.size(); i++)
+        {
+            if(participants[i]==username)
+            {
+                cout<<"User Already in group";
+                flag=1;
+                break;
+            }
+        }
+        if(flag==0)
+        {
+            cout<<"Request is sent sucessfully"
+        }
+
 
     }
 };
