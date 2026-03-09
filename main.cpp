@@ -577,7 +577,7 @@ public:
 
     }
 
-    void viewChats() 
+    void viewChats() const
     {
         if (!isLoggedIn())
         {
