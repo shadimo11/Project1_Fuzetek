@@ -178,10 +178,10 @@ public:
         if(replyTo != nullptr)
             cout << "  >> Replying to [" << replyTo->getSender() << "]: " << replyTo->getContent() << endl; 
         
-        cout << "Sender:"  << sender    << endl;
-        cout << "Message:" << content   << endl;
-        cout << "Time:"    << timestamp << endl;
-        cout << "Status:"  << status    << endl;
+        cout << "  | Sender  : " << sender    << endl;
+        cout << "  | Message : " << content   << endl;
+        cout << "  | Time    : " << timestamp;
+        cout << "  | Status  : " << status    << endl;
         cout << "---" << endl;
     }
 
@@ -690,7 +690,7 @@ public:
         printHeader("📝 Sign Up");
         string uname, pwd, phone;
 
-        cout << "Enter username: ";
+        cout << "  Enter username     : "; cin >> uname;
         cin >> uname;
 
         if (findUserIndex(uname) != -1)
@@ -699,7 +699,7 @@ public:
             return;
         }
 
-        cout << "Enter password: ";
+        cout << "  Enter password     : "; cin >> pwd;
         cin >> pwd;
 
         if (pwd.length() < 6)
@@ -708,12 +708,12 @@ public:
             return;
         }
 
-        cout << "Enter phone number: ";
+        cout << "  Enter phone number : "; cin >> phone;
         cin >> phone;
 
         if (phone.empty())
         {
-            cout << "Phone number can't be empty." << endl;
+            cout << "  [!] Phone number can't be empty." << endl;
             return;
         }
 
@@ -721,13 +721,13 @@ public:
         {
             if (users[i].getPhoneNumber() == phone)
             {
-                cout << "This phone number is already linked to an account." << endl;
+                cout << "  [!] This phone number is already linked to an account." << endl;
                 return;
             }
         }
 
         users.push_back(User(uname, pwd, phone));
-        cout << "Account created successfully! You can now log in." << endl;
+        cout << "\n  [✓] Account created successfully! You can now log in." << endl;
     }
 
     void login()
@@ -735,43 +735,40 @@ public:
         printHeader("🔐 Login");
         if (isLoggedIn())
         {
-            cout << "You are already logged in as " << getCurrentUsername() << endl;
+            cout << "  [!] You are already logged in as " << getCurrentUsername() << endl;
             return;
         }
 
         string uname, pwd;
 
-        cout << "Enter username: ";
-        cin >> uname;
-
-        cout << "Enter password: ";
-        cin >> pwd;
+        cout << "  Enter username : "; cin >> uname;
+        cout << "  Enter password : "; cin >> pwd;
 
         int index = findUserIndex(uname);
 
         if (index == -1)
         {
-            cout << "Username not found." << endl;
+            cout << "  [!] Username not found." << endl;
             return;
         }
 
         if (!users[index].checkPassword(pwd))
         {
-            cout << "Wrong password." << endl;
+            cout << "  [!] Wrong password." << endl;
             return;
         }
 
         currentUserIndex = index;
         users[currentUserIndex].setStatus("Online");
         users[currentUserIndex].updateLastSeen();
-        cout << "Welcome back, " << uname << "!" << endl;
+        cout << "\n  [✓] Welcome back, " << uname << "! 👋" << endl;
     }
 
     void startPrivateChat() {
         printHeader("💬 Start Private Chat");
 
         string user1 = getCurrentUsername(), user2;
-        cout << "Enter the username you want to chat with: ";
+        cout << "  Enter username to chat with: ";
         cin >> user2;
 
         if (user2 == getCurrentUsername())
@@ -933,11 +930,11 @@ public:
         {
             if (!isLoggedIn())
             {
-                cout << "No one is logged in." << endl;
+            cout << "  [!] No one is logged in." << endl;
                 return;
             }
 
-            cout << "Goodbye, " << getCurrentUsername() << "!" << endl;
+            cout << "\n  [✓] Goodbye, " << getCurrentUsername() << "! 👋" << endl;
             users[currentUserIndex].setStatus("Offline");
             users[currentUserIndex].updateLastSeen();
             currentUserIndex = -1;
