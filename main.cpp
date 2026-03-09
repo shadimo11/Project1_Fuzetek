@@ -201,6 +201,7 @@ public:
 // ========================
 class Chat
 {
+    friend class WhatsApp;
 protected:
     vector<string> participants;
     vector<Message> messages;
@@ -576,9 +577,64 @@ public:
 
     }
 
-    void viewChats() const
+    void viewChats() 
     {
-        // TODO: Implement chat viewing
+        if (!isLoggedIn())
+        {
+            cout << " [!] You must be logged in to view your chats." << endl;
+            return;
+        }
+
+        string currentUser = getCurrentUsername();
+        vector<Chat*> myChats;
+
+        for (int i = 0; i < chats.size(); i++)
+        {
+            bool inChat = false;
+            for (int j = 0; j < chats[i]->participants.size(); j++)
+            {
+                if (chats[i]->participants[j] == currentUser)
+                {
+                    inChat = true;
+                    break;
+                }
+            }
+            
+            if (inChat)
+            {
+                myChats.push_back(chats[i]);
+            }
+        }
+
+        if (myChats.empty())
+        {
+            cout << "\n You have no active chats. Start a private chat or create a group!" << endl;
+            return;
+        }
+
+        cout << "\n========== YOUR CHATS ==========" << endl;
+        for (int i = 0; i < myChats.size(); i++)
+        {
+            cout << " " << i + 1 << ". " << myChats[i]->chatName << endl;
+        }
+        cout << "================================" << endl;
+
+        cout << "Enter the number of the chat to open (or 0 to return to main menu): ";
+        int choice;
+        cin >> choice;
+
+        if (choice == 0)
+        {
+            return;
+        }
+        else if (choice > 0 && choice <= myChats.size())
+        {
+            myChats[choice - 1]->displayChat();
+        }
+        else
+        {
+            cout << " [!] Invalid selection. Returning to menu." << endl;
+        }
     }
 
     void logout()
