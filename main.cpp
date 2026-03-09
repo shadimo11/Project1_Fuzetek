@@ -590,6 +590,15 @@ public:
         PrivateChat *chat = new PrivateChat(user1, user2);
         chats.push_back(chat);
         cout << "Chat with " << user2 << " started!" << endl;
+        
+        while (true)
+        {
+            cout << "\n1. Send Message\n2. View Chat\n3. Back\nChoice: ";
+            int choice; cin >> choice;
+            if (choice == 1) sendMessage(chat);
+            else if (choice == 2) chat->displayChat();
+            else break;
+        }
     }
 
     void createGroup()
