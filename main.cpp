@@ -322,23 +322,19 @@ public:
             return;
         }
 
-        // CSV header row
         file << "Index,Sender,Message,Timestamp,Status,ReplyTo\n";
 
         for (int i = 0; i < (int)messages.size(); i++) {
 
-            // Get content and escape any commas or quotes inside it
             string content = messages[i].getContent();
             string timestamp = messages[i].getTimestamp();
 
-            // Wrap fields in quotes to handle commas or newlines inside them
             file << i << ",";
             file << "\"" << messages[i].getSender()  << "\",";
             file << "\"" << content                   << "\",";
             file << "\"" << timestamp                 << "\",";
             file << "\"" << messages[i].getStatus()   << "\",";
 
-            // ReplyTo column — show sender of replied message or leave empty
             if (messages[i].getReplyTo() != nullptr)
                 file << "\"" << messages[i].getReplyTo()->getSender() << "\"";
             else
@@ -852,7 +848,6 @@ public:
             return;
         }
 
-        // Check if chat already exists
         Chat* existingChat = nullptr;
         for (int i = 0; i < (int)chats.size(); i++) {
             PrivateChat* pc = dynamic_cast<PrivateChat*>(chats[i]);
