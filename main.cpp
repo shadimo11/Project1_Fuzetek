@@ -481,7 +481,7 @@ public:
     {
         cout << "========== Group: " << chatName << " ==========" << endl;
         if (!description.empty())
-            cout << "  Description: " << description << endl;
+            cout << "   📝 " << description << endl;
 
         cout << "  Participants: ";
         for (int i = 0; i< participants.size(); i++)
@@ -687,6 +687,7 @@ public:
 
     void signUp()
     {
+        printHeader("📝 Sign Up");
         string uname, pwd, phone;
 
         cout << "Enter username: ";
@@ -731,6 +732,7 @@ public:
 
     void login()
     {
+        printHeader("🔐 Login");
         if (isLoggedIn())
         {
             cout << "You are already logged in as " << getCurrentUsername() << endl;
@@ -766,35 +768,44 @@ public:
     }
 
     void startPrivateChat() {
-    string user1 = getCurrentUsername(), user2;
-    cout << "Enter the username you want to chat with: ";
-    cin >> user2;
+        printHeader("💬 Start Private Chat");
 
-    if (findUserIndex(user2) == -1) {
-        cout << "User not found." << endl;
-        return;
-    }
+        string user1 = getCurrentUsername(), user2;
+        cout << "Enter the username you want to chat with: ";
+        cin >> user2;
 
-    // Check if chat already exists
-    Chat* existingChat = nullptr;
-    for (int i = 0; i < (int)chats.size(); i++) {
-        PrivateChat* pc = dynamic_cast<PrivateChat*>(chats[i]);
-        if (pc && pc->isParticipant(user1) && pc->isParticipant(user2)) {
-            existingChat = chats[i];
-            break;
+        if (user2 == getCurrentUsername())
+        {
+            cout << "  [!] You cannot start a chat with yourself." << endl;
+            return;
         }
-    }
 
-    if (!existingChat) {
-        existingChat = new PrivateChat(user1, user2);
-        chats.push_back(existingChat);
-        cout << "Chat started!" << endl;
-    } else {
-        cout << "Reopening existing chat." << endl;
-    }
+        if (findUserIndex(user2) == -1) {
+            cout << "  [!] User \"" << user2 << "\" not found." << endl;
+            return;
+        }
 
-    openChatSession(existingChat);
-}
+        // Check if chat already exists
+        Chat* existingChat = nullptr;
+        for (int i = 0; i < (int)chats.size(); i++) {
+            PrivateChat* pc = dynamic_cast<PrivateChat*>(chats[i]);
+            if (pc && pc->isParticipant(user1) && pc->isParticipant(user2)) {
+                existingChat = chats[i];
+                break;
+            }
+        }
+
+        if (!existingChat)
+        {
+            existingChat = new PrivateChat(user1, user2);
+            chats.push_back(existingChat);
+            cout << "  [✓] Chat with " << user2 << " started!" << endl;
+        }
+        else
+            cout << "  [✓] Reopening existing chat with " << user2 << "." << endl;
+
+        openChatSession(existingChat);
+    }
 
     void createGroup()
     {
