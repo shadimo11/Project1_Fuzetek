@@ -491,6 +491,17 @@ private:
 public:
     WhatsApp() : currentUserIndex(-1) {}
 
+    void sendMessage(Chat* chat)
+    {
+        string content;
+        cout << "Enter message: ";
+        cin.ignore();
+        getline(cin, content);
+        Message msg(getCurrentUsername(), content);
+        chat->addMessage(msg);
+        cout << "[✓] Message sent." << endl;
+    }
+
     void signUp()
     {
         string uname, pwd, phone;
