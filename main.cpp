@@ -173,12 +173,15 @@ public:
         timestamp = ctime(&t);
     }
 
-    void display() const
-    {
-        cout << "Sender:" << sender << endl;
-        cout << "Message:" << content << endl;
-        cout << "Time:" << timestamp << endl;
-        cout << "Status:" << status << endl;
+    void display() const {
+        if(replyTo != nullptr)
+            cout << "  >> Replying to [" << replyTo->getSender() << "]: " << replyTo->getContent() << endl; 
+        
+        cout << "Sender:"  << sender    << endl;
+        cout << "Message:" << content   << endl;
+        cout << "Time:"    << timestamp << endl;
+        cout << "Status:"  << status    << endl;
+        cout << "---" << endl;
     }
 
     void addEmoji(string emojiCode)
@@ -666,17 +669,6 @@ public:
             else if (choice == 0) break;
             else cout << "[!] Invalid option." << endl;
         }
-    }
-
-    void sendMessage(Chat* chat)
-    {
-        string content;
-        cout << "Enter message: ";
-        cin.ignore();
-        getline(cin, content);
-        Message msg(getCurrentUsername(), content);
-        chat->addMessage(msg);
-        cout << "[✓] Message sent." << endl;
     }
 
     void signUp()
