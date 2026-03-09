@@ -194,6 +194,14 @@ public:
             to = "👍";
         else
             cout << "[!] Unknown emoji code: " << emojiCode << endl;
+
+        if (!to.empty()) {
+            size_t pos = 0;
+            while ((pos = content.find(from, pos)) != string::npos) {
+                content.replace(pos, from.length(), to);
+                pos += to.length();
+            }
+        }
     }
 };
 
@@ -247,7 +255,7 @@ public:
     {
         if(index>=0 && index<messages.size())
         {
-            if(messages[index].getStatus()=="sent" && messages[index].getSender()==username)
+            if (messages[index].getSender() == username)
             {
                 messages.erase(messages.begin()+index);
                 return true;
