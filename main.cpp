@@ -256,6 +256,10 @@ public:
         return false;
     }
 
+    string getChatName() const {
+        return chatName;
+    }
+
     virtual void displayChat() const
     {
         if (messages.empty())
