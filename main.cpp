@@ -579,6 +579,21 @@ public:
         PrivateChat *chat = new PrivateChat(user1, user2);
         chats.push_back(chat);
         cout << "Chat with " << user2 << " started!" << endl;
+        chat->displayChat();
+        string message;
+        cout<<"Please enter your message (or type exit to leave the chat):"<<endl;
+        while(true)
+        {
+
+            getline(cin, message);
+            if(message=="exit")
+            {
+                break;
+            }
+            Message msg(getCurrentUsername(),message);
+            chat->addMessage(msg);
+        }
+
     }
 
     void createGroup()
@@ -588,19 +603,24 @@ public:
         string member;
         int flag=0;
         int n;
+        cin.ignore();
         cout<<"Enter group name:"<<endl;
-        cin>>chatname;
+        getline(cin,chatname);
+        //cin.ignore();
         cout<<"Enter number of members in group:";
         cin>>n;
-        while(n<=0)
+
+
+        while(n<=2)
         {
-            cout<<"Cant make a group please enter a valid number";
+            cout<<"Cant make a group chat with 2 or less members";
             cin>>n;
         }
+        cin.ignore();
         cout<<"Enter the members of group:";
-        for(int i=0; i<n; i++)
+        for(int i=0; i<(n-1); i++)
         {
-            cin>>member;
+            getline(cin,member);
             flag=0;
             for(int j=0; j<users.size(); j++)
             {
@@ -617,7 +637,7 @@ public:
             else
             {
                 cout<<"This member doesnt have Whatsapp"<<endl;
-                cout<<"Please enter another member";
+                cout<<"Please enter another member:";
                 i--;
             }
 
@@ -628,7 +648,23 @@ public:
 
         chats.push_back(chat);
 
-        cout<<"Group is created successfully";
+        cout<<"Group is created successfully"<<endl;
+        chat->displayChat();
+        string message;
+        cout<<"Please enter your message (or type exit to leave the chat):"<<endl;
+        while(true)
+        {
+
+            getline(cin, message);
+            if(message=="exit")
+            {
+                break;
+            }
+            Message msg(getCurrentUsername(),message);
+            chat->addMessage(msg);
+        }
+
+
 
 
     }
@@ -655,7 +691,7 @@ public:
                     break;
                 }
             }
-            
+
             if (inChat)
             {
                 myChats.push_back(chats[i]);
