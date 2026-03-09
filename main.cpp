@@ -844,7 +844,7 @@ public:
         }
         else if (choice > 0 && choice <= myChats.size())
         {
-            myChats[choice - 1]->displayChat();
+            openChatSession(myChats[choice - 1]);
         }
         else
         {
