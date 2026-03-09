@@ -521,6 +521,15 @@ public:
             return;
         }
 
+        for (int i = 0; i < users.size(); i++)
+        {
+            if (users[i].getPhoneNumber() == phone)
+            {
+                cout << "This phone number is already linked to an account." << endl;
+                return;
+            }
+        }
+
         users.push_back(User(uname, pwd, phone));
         cout << "Account created successfully! You can now log in." << endl;
     }
