@@ -106,6 +106,7 @@ private:
     string status;
     Message* replyTo;
 
+
 public:
     Message()
     {
@@ -561,6 +562,18 @@ private:
 public:
     WhatsApp() : currentUserIndex(-1) {}
 
+    void printHeader(string title) const
+    {
+        cout << "\n  ============================================" << endl;
+        cout << "   " << title                                     << endl;
+        cout << "  ============================================"   << endl;
+    }
+
+    void printDivider() const
+    {
+        cout << "  --------------------------------------------" << endl;
+    }
+
     void openChatSession(Chat* chat) {
         while (true) {
             cout << "\n--- " << chat->getChatName() << " ---" << endl;
@@ -785,67 +798,63 @@ public:
 
     void createGroup()
     {
+        printHeader("👥 Create Group");
+
         string chatname;
         vector<string> members;
         string member;
-        int flag=0;
-        int n;
+        int flag = 0, n;
+
         cin.ignore();
-        cout<<"Enter group name:"<<endl;
-        getline(cin,chatname);
-        cout<<"Enter number of members in group:";
-        cin>>n;
+        cout << "  Enter group name           : "; getline(cin, chatname);
+        cout << "  Enter number of members    : "; cin >> n;
 
-
-        while(n<=0)
+        while (n <= 0)
         {
-            cout<<"Please enter a valid group number:";
-            cin>>n;
+            cout << "  [!] Please enter a valid number: ";
+            cin >> n;
         }
+
         cin.ignore();
-        cout<<"Enter the members of group:";
-        for(int i=0; i<(n-1); i++)
+        cout << "\n  Enter member usernames (one per line):" << endl;
+        printDivider();
+
+        for (int i = 0; i < (n - 1); i++)
         {
+            cout << "  Member " << (i + 1) << ": ";
+            getline(cin, member);
+            flag = 0;
 
-            getline(cin,member);
-            flag=0;
-
-            for(int j=0; j<users.size(); j++)
+            for (int j = 0; j < (int)users.size(); j++)
             {
-                if(users[j].getUsername()==member)
-
+                if (users[j].getUsername() == member)
                 {
-                    if(member==getCurrentUsername()){
-                        cout << "You are already the group creator, enter another member: " << endl;
+                    if (member == getCurrentUsername())
+                    {
+                        cout << "  [!] You are already the group creator, enter another member." << endl;
+                        i--;
                         break;
                     }
-                    flag=1;
+                    flag = 1;
                     break;
                 }
             }
-            if(flag==1)
-            {
+
+            if (flag == 1)
                 members.push_back(member);
-            }
-            else
+            else if (flag == 0 && member != getCurrentUsername())
             {
-                cout<<"Please enter another member:";
+                cout << "  [!] User not found. Please enter another member." << endl;
                 i--;
             }
-
         }
 
-        string admin=getCurrentUsername();
-        GroupChat* chat=new GroupChat(members,chatname,admin);
-
+        string admin = getCurrentUsername();
+        GroupChat* chat = new GroupChat(members, chatname, admin);
         chats.push_back(chat);
 
-        cout<<"Group is created successfully" << endl;
+        cout << "\n  [✓] Group \"" << chatname << "\" created successfully!" << endl;
         openChatSession(chat);
-
-
-
-
     }
 
     void viewChats()
