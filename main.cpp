@@ -189,7 +189,7 @@ public:
             to = "😀";
         else if (emojiCode == "<3")
             to = "❤️";
-        else if (emojiCode == ":thumbsup")
+        else if (emojiCode == ":thumbsup:")
             to = "👍";
         else
             cout << "[!] Unknown emoji code: " << emojiCode << endl;
