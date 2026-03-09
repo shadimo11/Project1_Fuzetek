@@ -3,6 +3,7 @@
 #include <string>
 #include <ctime>
 #include<algorithm>
+#include <windows.h>
 using namespace std;
 
 // ========================
@@ -534,13 +535,18 @@ public:
         cout << "Choice: ";
         int choice; cin >> choice;
 
-        // 1. SEND 
+        // 1. SEND
         if (choice == 1) {
             string content;
             cout << "Enter message: ";
             cin.ignore();
             getline(cin, content);
             Message msg(getCurrentUsername(), content);
+            msg.addEmoji(":)");
+             msg.addEmoji(":(");
+             msg.addEmoji(":D");
+             msg.addEmoji("<3");
+             msg.addEmoji(":thumbsup:");
             chat->addMessage(msg);
             cout << "[✓] Message sent." << endl;
         }
@@ -550,7 +556,7 @@ public:
             chat->displayChat();
         }
 
-        // 3. REPLY 
+        // 3. REPLY
         else if (choice == 3) {
             if (chat->getMessageCount() == 0) {
                 cout << "[!] No messages to reply to." << endl;
@@ -733,7 +739,7 @@ public:
         cout << "Reopening existing chat." << endl;
     }
 
-    openChatSession(existingChat); // ✅ now properly declared
+    openChatSession(existingChat);
 }
 
     void createGroup()
@@ -746,14 +752,13 @@ public:
         cin.ignore();
         cout<<"Enter group name:"<<endl;
         getline(cin,chatname);
-        //cin.ignore();
         cout<<"Enter number of members in group:";
         cin>>n;
 
 
-        while(n<=2)
+        while(n<=0)
         {
-            cout<<"Cant make a group chat with 2 or less members";
+            cout<<"Please enter a valid group number:";
             cin>>n;
         }
         cin.ignore();
@@ -801,6 +806,11 @@ public:
                 break;
             }
             Message msg(getCurrentUsername(),message);
+             msg.addEmoji(":)");
+             msg.addEmoji(":(");
+             msg.addEmoji(":D");
+             msg.addEmoji("<3");
+             msg.addEmoji(":thumbsup:");
             chat->addMessage(msg);
         }
 
@@ -931,6 +941,8 @@ public:
 // ========================
 int main()
 {
+     SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
     WhatsApp whatsapp;
     whatsapp.run();
     return 0;
