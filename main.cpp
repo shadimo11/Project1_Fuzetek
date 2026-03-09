@@ -468,20 +468,24 @@ private:
 
     int findUserIndex(string username) const
     {
-        // TODO: Implement user search
+        for (int i = 0; i < users.size(); i++)
+        {
+            if (users[i].getUsername() == username)
+                return i;
+        }
         return -1;
     }
 
     bool isLoggedIn() const
     {
-        // TODO: Implement login check
-        return false;
+        return currentUserIndex != -1;
     }
 
     string getCurrentUsername() const
     {
-        // TODO: Implement get current user
-        return "";
+        if (currentUserIndex == -1)
+            return "";
+        return users[currentUserIndex].getUsername();
     }
 
 public:
@@ -489,12 +493,73 @@ public:
 
     void signUp()
     {
-        // TODO: Implement user registration
+        string uname, pwd, phone;
+
+        cout << "Enter username: ";
+        cin >> uname;
+
+        if (findUserIndex(uname) != -1)
+        {
+            cout << "Username already taken, try another one." << endl;
+            return;
+        }
+
+        cout << "Enter password: ";
+        cin >> pwd;
+
+        if (pwd.length() < 6)
+        {
+            cout << "Password must be at least 6 characters." << endl;
+            return;
+        }
+
+        cout << "Enter phone number: ";
+        cin >> phone;
+
+        if (phone.empty())
+        {
+            cout << "Phone number can't be empty." << endl;
+            return;
+        }
+
+        users.push_back(User(uname, pwd, phone));
+        cout << "Account created successfully! You can now log in." << endl;
     }
 
     void login()
     {
-        // TODO: Implement user login
+        if (isLoggedIn())
+        {
+            cout << "You are already logged in as " << getCurrentUsername() << endl;
+            return;
+        }
+
+        string uname, pwd;
+
+        cout << "Enter username: ";
+        cin >> uname;
+
+        cout << "Enter password: ";
+        cin >> pwd;
+
+        int index = findUserIndex(uname);
+
+        if (index == -1)
+        {
+            cout << "Username not found." << endl;
+            return;
+        }
+
+        if (!users[index].checkPassword(pwd))
+        {
+            cout << "Wrong password." << endl;
+            return;
+        }
+
+        currentUserIndex = index;
+        users[currentUserIndex].setStatus("Online");
+        users[currentUserIndex].updateLastSeen();
+        cout << "Welcome back, " << uname << "!" << endl;
     }
 
     void startPrivateChat()
@@ -639,7 +704,18 @@ public:
 
     void logout()
     {
-        // TODO: Implement logout
+        {
+            if (!isLoggedIn())
+            {
+                cout << "No one is logged in." << endl;
+                return;
+            }
+
+            cout << "Goodbye, " << getCurrentUsername() << "!" << endl;
+            users[currentUserIndex].setStatus("Offline");
+            users[currentUserIndex].updateLastSeen();
+            currentUserIndex = -1;
+        }
     }
 
     void run()
