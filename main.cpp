@@ -218,24 +218,6 @@ public:
         chatName = name;
     }
 
-    // Add these missing methods here
-    string getChatName() const
-    {
-        return chatName;
-    }
-
-    virtual bool isParticipant(string username) const
-    {
-        for (int i = 0; i < participants.size(); i++)
-        {
-            if (participants[i] == username)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
     void addMessage(const Message& msg)
     {
         messages.push_back(msg);
@@ -594,9 +576,9 @@ public:
 
     }
 
-    void viewChats() 
+    void viewChats() const
     {
-        
+        // TODO: Implement chat viewing
     }
 
     void logout()
