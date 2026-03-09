@@ -498,7 +498,30 @@ public:
 
     void startPrivateChat()
     {
-        // TODO: Implement private chat creation
+        string user1=getCurrentUsername();
+        string user2;
+        cout<<"Enter the member name you want to chat with:";
+        cin>>user2;
+        bool ismember=false;
+        for(int i=0; i<users.size(); i++)
+        {
+            if(users[i].getUsername()==user2)
+            {
+                ismember=true;
+                break;
+            }
+        }
+        if(ismember==true)
+        {
+            PrivateChat*chat=new PrivateChat(user1,user2);
+            chats.push_back(chat);
+        }
+        else
+        {
+            cout<<"Member not found in Whatsapp";
+        }
+
+
     }
 
     void createGroup()
