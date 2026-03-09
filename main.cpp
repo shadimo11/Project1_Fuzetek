@@ -2,8 +2,10 @@
 #include <vector>
 #include <string>
 #include <ctime>
-#include<algorithm>
+#include <algorithm>
 #include <windows.h>
+#include <fstream>
+
 using namespace std;
 
 // ========================
@@ -307,9 +309,41 @@ public:
         return result;
     }
 
-    void exportToFile(const string& filename) const
-    {
-        // TODO: Implement export to file
+    void exportToFile(const string& filename) const {
+        ofstream file(filename);
+
+        if (!file.is_open()) {
+            cout << "[!] Could not open file: " << filename << endl;
+            return;
+        }
+
+        // CSV header row
+        file << "Index,Sender,Message,Timestamp,Status,ReplyTo\n";
+
+        for (int i = 0; i < (int)messages.size(); i++) {
+
+            // Get content and escape any commas or quotes inside it
+            string content = messages[i].getContent();
+            string timestamp = messages[i].getTimestamp();
+
+            // Wrap fields in quotes to handle commas or newlines inside them
+            file << i << ",";
+            file << "\"" << messages[i].getSender()  << "\",";
+            file << "\"" << content                   << "\",";
+            file << "\"" << timestamp                 << "\",";
+            file << "\"" << messages[i].getStatus()   << "\",";
+
+            // ReplyTo column — show sender of replied message or leave empty
+            if (messages[i].getReplyTo() != nullptr)
+                file << "\"" << messages[i].getReplyTo()->getSender() << "\"";
+            else
+                file << "\"\"";
+
+            file << "\n";
+        }
+
+        file.close();
+        cout << "[✓] Chat exported to " << filename << endl;
     }
 };
 
@@ -524,101 +558,115 @@ public:
     WhatsApp() : currentUserIndex(-1) {}
 
     void openChatSession(Chat* chat) {
-    while (true) {
-        cout << "\n--- " << chat->getChatName() << " ---" << endl;
-        cout << "1. Send Message"    << endl;
-        cout << "2. View Messages"   << endl;
-        cout << "3. Reply to Message"<< endl;
-        cout << "4. Delete a Message"<< endl;
-        cout << "5. Search Messages" << endl;
-        cout << "0. Back"            << endl;
-        cout << "Choice: ";
-        int choice; cin >> choice;
+        while (true) {
+            cout << "\n--- " << chat->getChatName() << " ---" << endl;
+            cout << "1. Send Message"     << endl;
+            cout << "2. View Messages"    << endl;
+            cout << "3. Reply to Message" << endl;
+            cout << "4. Delete a Message" << endl;
+            cout << "5. Search Messages"  << endl;
+            cout << "6. Export Chat"      << endl;  
+            cout << "0. Back"             << endl;
+            cout << "Choice: ";
+            int choice; cin >> choice;
 
-        // 1. SEND
-        if (choice == 1) {
-            string content;
-            cout << "Enter message: ";
-            cin.ignore();
-            getline(cin, content);
-            Message msg(getCurrentUsername(), content);
-            msg.addEmoji(":)");
-             msg.addEmoji(":(");
-             msg.addEmoji(":D");
-             msg.addEmoji("<3");
-             msg.addEmoji(":thumbsup:");
-            chat->addMessage(msg);
-            cout << "[✓] Message sent." << endl;
-        }
-
-        // 2. VIEW
-        else if (choice == 2) {
-            chat->displayChat();
-        }
-
-        // 3. REPLY
-        else if (choice == 3) {
-            if (chat->getMessageCount() == 0) {
-                cout << "[!] No messages to reply to." << endl;
-                continue;
-            }
-            chat->displayChat();
-            cout << "Enter message index to reply to (0 to "
-                 << chat->getMessageCount() - 1 << "): ";
-            int idx; cin >> idx;
-
-            Message* original = chat->getMessageAt(idx);
-            if (!original) {
-                cout << "[!] Invalid index." << endl;
-                continue;
+            // 1. SEND
+            if (choice == 1) {
+                string content;
+                cout << "Enter message: ";
+                cin.ignore();
+                getline(cin, content);
+                Message msg(getCurrentUsername(), content);
+                msg.addEmoji(":)");
+                msg.addEmoji(":(");
+                msg.addEmoji(":D");
+                msg.addEmoji("<3");
+                msg.addEmoji(":thumbsup:");
+                chat->addMessage(msg);
+                cout << "[✓] Message sent." << endl;
             }
 
-            string content;
-            cout << "Enter your reply: ";
-            cin.ignore();
-            getline(cin, content);
-
-            Message reply(getCurrentUsername(), content);
-            reply.setReplyTo(original);
-            chat->addMessage(reply);
-            cout << "[✓] Reply sent." << endl;
-        }
-
-        // 4. DELETE
-        else if (choice == 4) {
-            if (chat->getMessageCount() == 0) {
-                cout << "[!] No messages to delete." << endl;
-                continue;
+            // 2. VIEW
+            else if (choice == 2) {
+                chat->displayChat();
             }
-            chat->displayChat();
-            cout << "Enter message index to delete (0 to "
-                 << chat->getMessageCount() - 1 << "): ";
-            int idx; cin >> idx;
-            chat->deleteMessage(idx, getCurrentUsername());
-        }
 
-        // 5. SEARCH
-        else if (choice == 5) {
-            string keyword;
-            cout << "Enter keyword to search: ";
-            cin >> keyword;
+            // 3. REPLY
+            else if (choice == 3) {
+                if (chat->getMessageCount() == 0) {
+                    cout << "[!] No messages to reply to." << endl;
+                    continue;
+                }
+                chat->displayChat();
+                cout << "Enter message index to reply to (0 to "
+                    << chat->getMessageCount() - 1 << "): ";
+                int idx; cin >> idx;
 
-            vector<Message> results = chat->searchMessages(keyword);
-            if (results.empty()) {
-                cout << "[!] No messages found containing \""
-                     << keyword << "\"." << endl;
-            } else {
-                cout << "[✓] Found " << results.size()
-                     << " message(s):" << endl;
-                for (const auto& m : results)
-                    m.display();
+                Message* original = chat->getMessageAt(idx);
+                if (!original) {
+                    cout << "[!] Invalid index." << endl;
+                    continue;
+                }
+
+                string content;
+                cout << "Enter your reply: ";
+                cin.ignore();
+                getline(cin, content);
+
+                Message reply(getCurrentUsername(), content);
+                reply.setReplyTo(original);
+                reply.addEmoji(":)");
+                reply.addEmoji(":(");
+                reply.addEmoji(":D");
+                reply.addEmoji("<3");
+                reply.addEmoji(":thumbsup:");
+                chat->addMessage(reply);
+                cout << "[✓] Reply sent." << endl;
             }
-        }
 
-        else if (choice == 0) break;
-        else cout << "[!] Invalid option." << endl;
+            // 4. DELETE
+            else if (choice == 4) {
+                if (chat->getMessageCount() == 0) {
+                    cout << "[!] No messages to delete." << endl;
+                    continue;
+                }
+                chat->displayChat();
+                cout << "Enter message index to delete (0 to "
+                    << chat->getMessageCount() - 1 << "): ";
+                int idx; cin >> idx;
+                chat->deleteMessage(idx, getCurrentUsername());
+            }
+
+            // 5. SEARCH
+            else if (choice == 5) {
+                string keyword;
+                cout << "Enter keyword to search: ";
+                cin >> keyword;
+
+                vector<Message> results = chat->searchMessages(keyword);
+                if (results.empty()) {
+                    cout << "[!] No messages found containing \""
+                        << keyword << "\"." << endl;
+                } else {
+                    cout << "[✓] Found " << results.size()
+                        << " message(s):" << endl;
+                    for (const auto& m : results)
+                        m.display();
+                }
+            }
+
+            // 6. EXPORT
+            else if (choice == 6) {
+                string filename;
+                cout << "Enter filename (e.g. chat.csv): ";
+                cin >> filename;
+                chat->exportToFile(filename);
+            }
+
+            else if (choice == 0) break;
+            else cout << "[!] Invalid option." << endl;
+        }
     }
-}
 
     void sendMessage(Chat* chat)
     {
@@ -816,7 +864,7 @@ public:
              msg.addEmoji(":D");
              msg.addEmoji("<3");
              msg.addEmoji(":thumbsup:");
-            chat->addMessage(msg);
+             chat->addMessage(msg);
         }
 
 
