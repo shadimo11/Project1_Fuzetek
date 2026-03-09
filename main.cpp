@@ -166,7 +166,8 @@ public:
 
     void updateTimestamp()
     {
-        timestamp = time(0);
+        time_t t = time(nullptr);
+        timestamp = ctime(&t);
     }
 
     void display() const
@@ -189,7 +190,7 @@ public:
             to = "😀";
         else if (emojiCode == "<3")
             to = "❤️";
-        else if (emojiCode == ":thumbsup")
+        else if (emojiCode == ":thumbsup:")
             to = "👍";
         else
             cout << "[!] Unknown emoji code: " << emojiCode << endl;
@@ -219,6 +220,16 @@ public:
         chatName = name;
     }
 
+    int getMessageCount() const {
+    return (int)messages.size();
+    }
+
+    Message* getMessageAt(int index) {
+    if (index < 0 || index >= (int)messages.size())
+        return nullptr;
+    return &messages[index];
+    }
+
     void addMessage(const Message& msg)
     {
         messages.push_back(msg);
@@ -243,6 +254,10 @@ public:
             cout<<"can't delete index out of range";
         }
         return false;
+    }
+
+    string getChatName() const {
+        return chatName;
     }
 
     virtual void displayChat() const
@@ -491,6 +506,109 @@ private:
 public:
     WhatsApp() : currentUserIndex(-1) {}
 
+    void openChatSession(Chat* chat) {
+    while (true) {
+        cout << "\n--- " << chat->getChatName() << " ---" << endl;
+        cout << "1. Send Message"    << endl;
+        cout << "2. View Messages"   << endl;
+        cout << "3. Reply to Message"<< endl;
+        cout << "4. Delete a Message"<< endl;
+        cout << "5. Search Messages" << endl;
+        cout << "0. Back"            << endl;
+        cout << "Choice: ";
+        int choice; cin >> choice;
+
+        // 1. SEND 
+        if (choice == 1) {
+            string content;
+            cout << "Enter message: ";
+            cin.ignore();
+            getline(cin, content);
+            Message msg(getCurrentUsername(), content);
+            chat->addMessage(msg);
+            cout << "[✓] Message sent." << endl;
+        }
+
+        // 2. VIEW
+        else if (choice == 2) {
+            chat->displayChat();
+        }
+
+        // 3. REPLY 
+        else if (choice == 3) {
+            if (chat->getMessageCount() == 0) {
+                cout << "[!] No messages to reply to." << endl;
+                continue;
+            }
+            chat->displayChat();
+            cout << "Enter message index to reply to (0 to "
+                 << chat->getMessageCount() - 1 << "): ";
+            int idx; cin >> idx;
+
+            Message* original = chat->getMessageAt(idx);
+            if (!original) {
+                cout << "[!] Invalid index." << endl;
+                continue;
+            }
+
+            string content;
+            cout << "Enter your reply: ";
+            cin.ignore();
+            getline(cin, content);
+
+            Message reply(getCurrentUsername(), content);
+            reply.setReplyTo(original);
+            chat->addMessage(reply);
+            cout << "[✓] Reply sent." << endl;
+        }
+
+        // 4. DELETE
+        else if (choice == 4) {
+            if (chat->getMessageCount() == 0) {
+                cout << "[!] No messages to delete." << endl;
+                continue;
+            }
+            chat->displayChat();
+            cout << "Enter message index to delete (0 to "
+                 << chat->getMessageCount() - 1 << "): ";
+            int idx; cin >> idx;
+            chat->deleteMessage(idx, getCurrentUsername());
+        }
+
+        // 5. SEARCH
+        else if (choice == 5) {
+            string keyword;
+            cout << "Enter keyword to search: ";
+            cin >> keyword;
+
+            vector<Message> results = chat->searchMessages(keyword);
+            if (results.empty()) {
+                cout << "[!] No messages found containing \""
+                     << keyword << "\"." << endl;
+            } else {
+                cout << "[✓] Found " << results.size()
+                     << " message(s):" << endl;
+                for (const auto& m : results)
+                    m.display();
+            }
+        }
+
+        else if (choice == 0) break;
+        else cout << "[!] Invalid option." << endl;
+    }
+}
+
+    void sendMessage(Chat* chat)
+    {
+        string content;
+        cout << "Enter message: ";
+        cin.ignore();
+        getline(cin, content);
+        Message msg(getCurrentUsername(), content);
+        chat->addMessage(msg);
+        cout << "[✓] Message sent." << endl;
+    }
+
     void signUp()
     {
         string uname, pwd, phone;
@@ -579,21 +697,15 @@ public:
         PrivateChat *chat = new PrivateChat(user1, user2);
         chats.push_back(chat);
         cout << "Chat with " << user2 << " started!" << endl;
-        chat->displayChat();
-        string message;
-        cout<<"Please enter your message (or type exit to leave the chat):"<<endl;
-        while(true)
+        
+        while (true)
         {
-
-            getline(cin, message);
-            if(message=="exit")
-            {
-                break;
-            }
-            Message msg(getCurrentUsername(),message);
-            chat->addMessage(msg);
+            cout << "\n1. Send Message\n2. View Chat\n3. Back\nChoice: ";
+            int choice; cin >> choice;
+            if (choice == 1) sendMessage(chat);
+            else if (choice == 2) chat->displayChat();
+            else break;
         }
-
     }
 
     void createGroup()
