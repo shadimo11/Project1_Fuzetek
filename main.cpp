@@ -792,7 +792,7 @@ public:
 
     }
 
-    void viewChats() const
+    void viewChats()
     {
         if (!isLoggedIn())
         {
