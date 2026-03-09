@@ -813,12 +813,18 @@ public:
         cout<<"Enter the members of group:";
         for(int i=0; i<(n-1); i++)
         {
+
             getline(cin,member);
             flag=0;
+
             for(int j=0; j<users.size(); j++)
             {
                 if(users[j].getUsername()==member)
+
                 {
+                    if(member==getCurrentUsername()){
+                        break;
+                    }
                     flag=1;
                     break;
                 }
@@ -829,7 +835,6 @@ public:
             }
             else
             {
-                cout<<"This member doesnt have Whatsapp"<<endl;
                 cout<<"Please enter another member:";
                 i--;
             }
