@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <ctime>
+#include<algorithm>
 using namespace std;
 
 // ========================
@@ -331,11 +332,13 @@ private:
     string description;
 
 public:
-    GroupChat(vector<string> users, string name, string creator) {
-         participants = user;
-         groupName = name;
-         participants.push_back(creator);
-         admins.push_back(creator);
+    GroupChat(vector<string> users, string name, string creator)
+    {
+        participants = users;
+        chatName = name;
+        participants.push_back(creator);
+        admins.push_back(creator);
+        description="";
     }
 
     void addAdmin(string newAdmin)
@@ -366,7 +369,7 @@ public:
             if (*i == userToRemove)
             {
                 participants.erase(i);
-                admins.erase(remove(admins.begin(), admins.end(), userToRemove), admins.end());
+                admins.erase(std::remove(admins.begin(), admins.end(), userToRemove), admins.end());
                 cout << "  Done!, " << userToRemove << " removed from the group." << endl;
                 return true;
             }
@@ -375,7 +378,8 @@ public:
         return false;
     }
 
-    bool isAdmin(string username) const {
+    bool isAdmin(string username) const
+    {
         for (int i = 0; i < admins.size(); i++)
         {
             if (admins[i] == username)
@@ -396,7 +400,8 @@ public:
         return false;
     }
 
-    void setDescription(string desc) {
+    void setDescription(string desc)
+    {
         description = desc ;
     }
 
@@ -443,7 +448,7 @@ public:
         }
         if(flag==0)
         {
-            cout<<"Request is sent sucessfully"
+            cout<<"Request is sent sucessfully";
         }
 
 
@@ -493,12 +498,82 @@ public:
 
     void startPrivateChat()
     {
-        // TODO: Implement private chat creation
+        string user1=getCurrentUsername();
+        string user2;
+        cout<<"Enter the member name you want to chat with:";
+        cin>>user2;
+        bool ismember=false;
+        for(int i=0; i<users.size(); i++)
+        {
+            if(users[i].getUsername()==user2)
+            {
+                ismember=true;
+                break;
+            }
+        }
+        if(ismember==true)
+        {
+            PrivateChat*chat=new PrivateChat(user1,user2);
+            chats.push_back(chat);
+        }
+        else
+        {
+            cout<<"Member not found in Whatsapp";
+        }
+
+
     }
 
     void createGroup()
     {
-        // TODO: Implement group creation
+        string chatname;
+        vector<string> members;
+        string member;
+        int flag=0;
+        int n;
+        cout<<"Enter group name:"<<endl;
+        cin>>chatname;
+        cout<<"Enter number of members in group:";
+        cin>>n;
+        while(n<=0)
+        {
+            cout<<"Cant make a group please enter a valid number";
+            cin>>n;
+        }
+        cout<<"Enter the members of group:";
+        for(int i=0; i<n; i++)
+        {
+            cin>>member;
+            flag=0;
+            for(int j=0; j<users.size(); j++)
+            {
+                if(users[j].getUsername()==member)
+                {
+                    flag=1;
+                    break;
+                }
+            }
+            if(flag==1)
+            {
+                members.push_back(member);
+            }
+            else
+            {
+                cout<<"This member doesnt have Whatsapp"<<endl;
+                cout<<"Please enter another member";
+                i--;
+            }
+
+        }
+
+        string admin=getCurrentUsername();
+        GroupChat* chat=new GroupChat(members,chatname,admin);
+
+        chats.push_back(chat);
+
+        cout<<"Group is created successfully";
+
+
     }
 
     void viewChats() const
