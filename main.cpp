@@ -2,8 +2,10 @@
 #include <vector>
 #include <string>
 #include <ctime>
-#include<algorithm>
+#include <algorithm>
 #include <windows.h>
+#include <fstream>
+
 using namespace std;
 
 // ========================
@@ -307,9 +309,41 @@ public:
         return result;
     }
 
-    void exportToFile(const string& filename) const
-    {
-        // TODO: Implement export to file
+    void exportToFile(const string& filename) const {
+        ofstream file(filename);
+
+        if (!file.is_open()) {
+            cout << "[!] Could not open file: " << filename << endl;
+            return;
+        }
+
+        // CSV header row
+        file << "Index,Sender,Message,Timestamp,Status,ReplyTo\n";
+
+        for (int i = 0; i < (int)messages.size(); i++) {
+
+            // Get content and escape any commas or quotes inside it
+            string content = messages[i].getContent();
+            string timestamp = messages[i].getTimestamp();
+
+            // Wrap fields in quotes to handle commas or newlines inside them
+            file << i << ",";
+            file << "\"" << messages[i].getSender()  << "\",";
+            file << "\"" << content                   << "\",";
+            file << "\"" << timestamp                 << "\",";
+            file << "\"" << messages[i].getStatus()   << "\",";
+
+            // ReplyTo column — show sender of replied message or leave empty
+            if (messages[i].getReplyTo() != nullptr)
+                file << "\"" << messages[i].getReplyTo()->getSender() << "\"";
+            else
+                file << "\"\"";
+
+            file << "\n";
+        }
+
+        file.close();
+        cout << "[✓] Chat exported to " << filename << endl;
     }
 };
 
@@ -811,7 +845,7 @@ public:
              msg.addEmoji(":D");
              msg.addEmoji("<3");
              msg.addEmoji(":thumbsup:");
-            chat->addMessage(msg);
+             chat->addMessage(msg);
         }
 
 
