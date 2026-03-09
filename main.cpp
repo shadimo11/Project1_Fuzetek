@@ -575,22 +575,32 @@ public:
     }
 
     void openChatSession(Chat* chat) {
+
+        // Detect if this is a group chat once, reuse throughout
+        GroupChat* gc = dynamic_cast<GroupChat*>(chat);
+
         while (true) {
-            cout << "\n--- " << chat->getChatName() << " ---" << endl;
-            cout << "1. Send Message"     << endl;
-            cout << "2. View Messages"    << endl;
-            cout << "3. Reply to Message" << endl;
-            cout << "4. Delete a Message" << endl;
-            cout << "5. Search Messages"  << endl;
-            cout << "6. Export Chat"      << endl;  
-            cout << "0. Back"             << endl;
-            cout << "Choice: ";
+            cout << "\n  ┌─── " << chat->getChatName() << " ───┐" << endl;
+            cout << "  │ 1. Send Message"                          << endl;
+            cout << "  │ 2. View Messages"                         << endl;
+            cout << "  │ 3. Reply to Message"                      << endl;
+            cout << "  │ 4. Delete a Message"                      << endl;
+            cout << "  │ 5. Search Messages"                       << endl;
+            cout << "  │ 6. Export Chat (.csv)"                    << endl;
+            if (gc) {
+                cout << "  │ 7. Set Group Description"             << endl;
+                cout << "  │ 8. Add Admin"                         << endl;
+                cout << "  │ 9. Remove Participant"                << endl;
+            }
+            cout << "  │ 0. Back"                                  << endl;
+            cout << "  └────────────────────────────────────────"  << endl;
+            cout << "  Choice: ";
             int choice; cin >> choice;
 
-            // 1. SEND
+            // ── 1. SEND ──────────────────────────────────────
             if (choice == 1) {
                 string content;
-                cout << "Enter message: ";
+                cout << "\n  Enter message: ";
                 cin.ignore();
                 getline(cin, content);
                 Message msg(getCurrentUsername(), content);
@@ -600,88 +610,117 @@ public:
                 msg.addEmoji("<3");
                 msg.addEmoji(":thumbsup:");
                 chat->addMessage(msg);
-                cout << "[✓] Message sent." << endl;
+                cout << "  [✓] Message sent." << endl;
             }
 
-            // 2. VIEW
+            // ── 2. VIEW ──────────────────────────────────────
             else if (choice == 2) {
                 chat->displayChat();
             }
 
-            // 3. REPLY
+            // ── 3. REPLY ─────────────────────────────────────
             else if (choice == 3) {
                 if (chat->getMessageCount() == 0) {
-                    cout << "[!] No messages to reply to." << endl;
+                    cout << "  [!] No messages to reply to." << endl;
                     continue;
                 }
                 chat->displayChat();
-                cout << "Enter message index to reply to (0 to "
+                cout << "  Enter message index to reply to (0 to "
                     << chat->getMessageCount() - 1 << "): ";
                 int idx; cin >> idx;
 
-                Message* original = chat->getMessageAt(idx);
+                Message* original = chat->getMessageAt(idx); 
                 if (!original) {
-                    cout << "[!] Invalid index." << endl;
+                    cout << "  [!] Invalid index." << endl;
                     continue;
                 }
 
                 string content;
-                cout << "Enter your reply: ";
+                cout << "  Enter your reply: ";
                 cin.ignore();
                 getline(cin, content);
 
                 Message reply(getCurrentUsername(), content);
-                reply.setReplyTo(original);
+                reply.setReplyTo(original); 
                 reply.addEmoji(":)");
                 reply.addEmoji(":(");
                 reply.addEmoji(":D");
                 reply.addEmoji("<3");
                 reply.addEmoji(":thumbsup:");
                 chat->addMessage(reply);
-                cout << "[✓] Reply sent." << endl;
+                cout << "  [✓] Reply sent." << endl;
             }
 
-            // 4. DELETE
+            // ── 4. DELETE ────────────────────────────────────
             else if (choice == 4) {
                 if (chat->getMessageCount() == 0) {
-                    cout << "[!] No messages to delete." << endl;
+                    cout << "  [!] No messages to delete." << endl;
                     continue;
                 }
                 chat->displayChat();
-                cout << "Enter message index to delete (0 to "
+                cout << "  Enter message index to delete (0 to "
                     << chat->getMessageCount() - 1 << "): ";
                 int idx; cin >> idx;
                 chat->deleteMessage(idx, getCurrentUsername());
             }
 
-            // 5. SEARCH
+            // ── 5. SEARCH ────────────────────────────────────
             else if (choice == 5) {
                 string keyword;
-                cout << "Enter keyword to search: ";
+                cout << "  Enter keyword to search: ";
                 cin >> keyword;
 
                 vector<Message> results = chat->searchMessages(keyword);
-                if (results.empty()) {
-                    cout << "[!] No messages found containing \""
-                        << keyword << "\"." << endl;
-                } else {
-                    cout << "[✓] Found " << results.size()
-                        << " message(s):" << endl;
+                if (results.empty())
+                    cout << "  [!] No messages found containing \"" << keyword << "\"." << endl;
+                else {
+                    cout << "\n  [✓] Found " << results.size() << " message(s):" << endl;
+                    printDivider();
                     for (const auto& m : results)
                         m.display();
                 }
             }
 
-            // 6. EXPORT
+            // ── 6. EXPORT ────────────────────────────────────
             else if (choice == 6) {
                 string filename;
-                cout << "Enter filename (e.g. chat.csv): ";
+                cout << "  Enter filename (e.g. chat.csv): ";
                 cin >> filename;
                 chat->exportToFile(filename);
             }
 
+            // ── 7. SET DESCRIPTION (group only) ──────────────
+            else if (choice == 7 && gc) {
+                string desc;
+                cout << "  Enter new description: ";
+                cin.ignore();
+                getline(cin, desc);
+                gc->setDescription(desc);
+                cout << "  [✓] Description updated." << endl;
+            }
+
+            // ── 8. ADD ADMIN (group only) ─────────────────────
+            else if (choice == 8 && gc) {
+                if (!gc->isAdmin(getCurrentUsername())) {
+                    cout << "  [!] Only admins can add other admins." << endl;
+                } else {
+                    string newAdmin;
+                    cout << "  Enter username to make admin: ";
+                    cin >> newAdmin;
+                    gc->addAdmin(newAdmin);
+                }
+            }
+
+            // ── 9. REMOVE PARTICIPANT (group only) ────────────
+            else if (choice == 9 && gc) {
+                string userToRemove;
+                cout << "  Enter username to remove: ";
+                cin >> userToRemove;
+                gc->removeParticipant(getCurrentUsername(), userToRemove);
+            }
+
             else if (choice == 0) break;
-            else cout << "[!] Invalid option." << endl;
+            else cout << "  [!] Invalid option." << endl;
         }
     }
 
@@ -690,7 +729,7 @@ public:
         printHeader("📝 Sign Up");
         string uname, pwd, phone;
 
-        cout << "  Enter username     : "; cin >> uname;
+        cout << "  Enter username     : ";
         cin >> uname;
 
         if (findUserIndex(uname) != -1)
@@ -699,7 +738,7 @@ public:
             return;
         }
 
-        cout << "  Enter password     : "; cin >> pwd;
+        cout << "  Enter password     : ";
         cin >> pwd;
 
         if (pwd.length() < 6)
@@ -708,7 +747,7 @@ public:
             return;
         }
 
-        cout << "  Enter phone number : "; cin >> phone;
+        cout << "  Enter phone number : ";
         cin >> phone;
 
         if (phone.empty())
