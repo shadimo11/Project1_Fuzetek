@@ -220,6 +220,14 @@ public:
         chatName = name;
     }
 
+    bool isParticipant(const string& username) const {
+    for (int i = 0; i < (int)participants.size(); i++)
+        if (participants[i] == username)
+            return true;
+
+    return false;
+}
+
     int getMessageCount() const {
     return (int)messages.size();
     }
@@ -680,33 +688,36 @@ public:
         cout << "Welcome back, " << uname << "!" << endl;
     }
 
-    void startPrivateChat()
-    {
-        string user1 = getCurrentUsername();
-        string user2;
+    void startPrivateChat() {
+    string user1 = getCurrentUsername(), user2;
+    cout << "Enter the username you want to chat with: ";
+    cin >> user2;
 
-        cout << "Enter the username you want to chat with: ";
-        cin >> user2;
+    if (findUserIndex(user2) == -1) {
+        cout << "User not found." << endl;
+        return;
+    }
 
-        if (findUserIndex(user2) == -1)
-        {
-            cout << "User not found." << endl;
-            return;
-        }
-
-        PrivateChat *chat = new PrivateChat(user1, user2);
-        chats.push_back(chat);
-        cout << "Chat with " << user2 << " started!" << endl;
-        
-        while (true)
-        {
-            cout << "\n1. Send Message\n2. View Chat\n3. Back\nChoice: ";
-            int choice; cin >> choice;
-            if (choice == 1) sendMessage(chat);
-            else if (choice == 2) chat->displayChat();
-            else break;
+    // Check if chat already exists
+    Chat* existingChat = nullptr;
+    for (int i = 0; i < (int)chats.size(); i++) {
+        PrivateChat* pc = dynamic_cast<PrivateChat*>(chats[i]);
+        if (pc && pc->isParticipant(user1) && pc->isParticipant(user2)) {
+            existingChat = chats[i];
+            break;
         }
     }
+
+    if (!existingChat) {
+        existingChat = new PrivateChat(user1, user2);
+        chats.push_back(existingChat);
+        cout << "Chat started!" << endl;
+    } else {
+        cout << "Reopening existing chat." << endl;
+    }
+
+    openChatSession(existingChat); // ✅ now properly declared
+}
 
     void createGroup()
     {
