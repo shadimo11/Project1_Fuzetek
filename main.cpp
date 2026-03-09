@@ -226,6 +226,7 @@ public:
     Chat()
     {
         chatName = "";
+        messages.reserve(100);  // Prevents reallocatiion for the first 100 messages
     }
 
     Chat(vector<string> users, string name)
