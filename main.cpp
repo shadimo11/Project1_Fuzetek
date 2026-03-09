@@ -724,6 +724,37 @@ public:
         }
     }
 
+    void sendJoinRequest() {
+        printHeader("📨 Send Join Request");
+
+        vector<GroupChat*> availableGroups;
+        for (int i = 0; i < (int)chats.size(); i++) {
+            GroupChat* gc = dynamic_cast<GroupChat*>(chats[i]);
+            if (gc && !gc->isParticipant(getCurrentUsername()))
+                availableGroups.push_back(gc);
+        }
+
+        if (availableGroups.empty()) {
+            cout << "  [!] No groups available to join." << endl;
+            return;
+        }
+
+        cout << "  Available groups:" << endl;
+        printDivider();
+        for (int i = 0; i < (int)availableGroups.size(); i++)
+            cout << "  [" << i + 1 << "] " << availableGroups[i]->getChatName() << endl;
+        printDivider();
+
+        cout << "  Select group (0 to cancel): ";
+        int choice; cin >> choice;
+
+        if (choice == 0) return;
+        else if (choice > 0 && choice <= (int)availableGroups.size())
+            availableGroups[choice - 1]->sendJoinRequest(getCurrentUsername());
+        else
+            cout << "  [!] Invalid selection." << endl;
+    }
+
     void signUp()
     {
         printHeader("📝 Sign Up");
@@ -1012,7 +1043,8 @@ public:
                 cout << "  │  1. Start Private Chat                  " << endl;
                 cout << "  │  2. Create Group                        " << endl;
                 cout << "  │  3. View Chats                          " << endl;
-                cout << "  │  4. Logout                              " << endl;
+                cout << "  │  4. Send Join Request                          " << endl;
+                cout << "  │  5. Logout                              " << endl;
                 cout << "  └─────────────────────────────────────────" << endl;
                 cout << "  Choice: ";
                 int choice; cin >> choice;
@@ -1024,6 +1056,8 @@ public:
                 else if (choice == 3)
                     viewChats();
                 else if (choice == 4)
+                    sendJoinRequest();
+                else if (choice == 5)
                     logout();
                 else
                     cout << "Invalid choice, try again." << endl;
