@@ -823,6 +823,7 @@ public:
 
                 {
                     if(member==getCurrentUsername()){
+                        cout << "You are already the group creator, enter another member: " << endl;
                         break;
                     }
                     flag=1;
@@ -846,26 +847,8 @@ public:
 
         chats.push_back(chat);
 
-        cout<<"Group is created successfully"<<endl;
-        chat->displayChat();
-        string message;
-        cout<<"Please enter your message (or type exit to leave the chat):"<<endl;
-        while(true)
-        {
-
-            getline(cin, message);
-            if(message=="exit")
-            {
-                break;
-            }
-            Message msg(getCurrentUsername(),message);
-             msg.addEmoji(":)");
-             msg.addEmoji(":(");
-             msg.addEmoji(":D");
-             msg.addEmoji("<3");
-             msg.addEmoji(":thumbsup:");
-             chat->addMessage(msg);
-        }
+        cout<<"Group is created successfully" << endl;
+        openChatSession(chat);
 
 
 
