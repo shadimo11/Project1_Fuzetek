@@ -166,7 +166,8 @@ public:
 
     void updateTimestamp()
     {
-        timestamp = time(0);
+        time_t t = time(nullptr);
+        timestamp = ctime(&t);
     }
 
     void display() const
