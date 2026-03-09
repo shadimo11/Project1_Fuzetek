@@ -982,13 +982,20 @@ public:
 
     void run()
     {
+        cout << "\n  ╔══════════════════════════════════════════╗" << endl;
+        cout << "  ║     💬 WhatsApp Messaging System         ║" << endl;
+        cout << "  ╚══════════════════════════════════════════╝" << endl;
         while (true)
         {
             if (!isLoggedIn())
             {
-                cout << "\n1. Login\n2. Sign Up\n3. Exit\nChoice: ";
-                int choice;
-                cin >> choice;
+                cout << "\n  ┌─── Main Menu ───────────────────────────┐" << endl;
+                cout << "  │  1. Login                               │" << endl;
+                cout << "  │  2. Sign Up                             │" << endl;
+                cout << "  │  3. Exit                                │" << endl;
+                cout << "  └─────────────────────────────────────────┘" << endl;
+                cout << "  Choice: ";
+                int choice; cin >> choice;
 
                 if (choice == 1)
                     login();
@@ -997,14 +1004,18 @@ public:
                 else if (choice == 3)
                     break;
                 else
-                    cout << "Invalid choice, try again." << endl;
+                    cout << "  [!] Invalid choice, try again." << endl;
             }
             else
             {
-                cout << "\nHello, " << getCurrentUsername() << "!" << endl;
-                cout << "1. Start Private Chat\n2. Create Group\n3. View Chats\n4. Logout\nChoice: ";
-                int choice;
-                cin >> choice;
+                cout << "\n  ┌─── Hello, " << getCurrentUsername() << "!" << endl;
+                cout << "  │  1. Start Private Chat                  " << endl;
+                cout << "  │  2. Create Group                        " << endl;
+                cout << "  │  3. View Chats                          " << endl;
+                cout << "  │  4. Logout                              " << endl;
+                cout << "  └─────────────────────────────────────────" << endl;
+                cout << "  Choice: ";
+                int choice; cin >> choice;
 
                 if (choice == 1)
                     startPrivateChat();
